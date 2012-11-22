@@ -11,5 +11,7 @@ namespace Glass.Mvp
         T Resolve<T>(IDictionary args = null);
 
         IEnumerable<T> ResolveServices<T>();
+
+        object Resolve(Type type, IDictionary args = null);
     }
 }

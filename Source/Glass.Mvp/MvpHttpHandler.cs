@@ -29,10 +29,10 @@ namespace Glass.Mvp
 
         public IAsyncResult BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData)
         {
+            //TODO: resolve how I handle this, this needs to be Async
 
             var view = ResolveView(context, MvpGlobal.DependencyResolver);
 
-            //TODO: resolve how I handle this
             if (view != null)
             {
                 view.Execute(context.Response);

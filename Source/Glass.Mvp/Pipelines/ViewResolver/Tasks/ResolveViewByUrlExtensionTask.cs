@@ -40,13 +40,13 @@ namespace Glass.Mvp.Pipelines.ViewResolver.Tasks
 
             url = "/views" + url;
 
-            string path = context.Server.MapPath(url);
+            FilePath path = context.Server.MapPath(url);
 
             if (File.Exists(path))
             {
                 var stream = File.OpenRead(path);
                 view.File = stream;
-
+                view.Path = path;
                 return view;
             }
             else return null;

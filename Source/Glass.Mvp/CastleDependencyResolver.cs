@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Web.Compilation;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 
@@ -10,7 +13,7 @@ namespace Glass.Mvp
 {
     public class CastleDependencyResolver : IDependencyResolver
     {
-        private IWindsorContainer _container;
+        private static IWindsorContainer _container;
 
         public static readonly object _lock = new object();
 
@@ -27,9 +30,24 @@ namespace Glass.Mvp
                 {
                     if(_container == null)
                     {
-                        _container = new WindsorContainer(new XmlInterpreter()                            );
+                        SetupContainer();
                     }
                 }
+            }
+        }
+
+        private void SetupContainer()
+        {
+            _container = new WindsorContainer(new XmlInterpreter());
+            _container.Register(
+                Component.For<IDependencyResolver>().ImplementedBy<CastleDependencyResolver>()
+                );
+
+            var assemblies = BuildManager.GetReferencedAssemblies();
+
+            foreach (Assembly assembly in assemblies)
+            {
+                AllTypes.FromAssembly(assembly).BasedOn<Presenter>();
             }
         }
 
@@ -41,6 +59,10 @@ namespace Glass.Mvp
         public IEnumerable<T> ResolveServices<T>()
         {
             return _container.ResolveAll<T>();
+        }
+        public object Resolve(Type type, IDictionary args = null)
+        {
+            return _container.Resolve(type, args);
         }
     }
 }

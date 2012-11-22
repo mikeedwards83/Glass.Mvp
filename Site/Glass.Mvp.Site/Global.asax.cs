@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
+using Glass.Mvp;
 
 namespace Glass.Mvp.Site
 {
